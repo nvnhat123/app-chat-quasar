@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex column">
-    <q-banner class="bg-grey text-white">
+    <q-banner class="bg-grey text-white" v-if="!otherUserDetails.online">
       Unfortunately, the credit card did not go through, please try again.
     </q-banner>
     <div class="q-pa-md col column row justify-end">
@@ -47,28 +47,18 @@ export default {
   data() {
     return {
       newMessage: "",
-      // messages: [
-      //   {
-      //     content: "Hello ?",
-      //     from: "me",
-      //   },
-      //   {
-      //     content: "How are you ?",
-      //     from: "them",
-      //   },
-      //   {
-      //     content: "Fine.",
-      //     from: "me",
-      //   },
-      // ],
     };
   },
 
   methods: {
-    ...mapActions("store", ["firebaseGetMessages", "firebaseStopGettingMessages"]),
+    ...mapActions("store", ["firebaseGetMessages", "firebaseStopGettingMessages", "firebaseSendMessage"]),
     sendMessage() {
-      console.log(this.newMessage);
-      this.messages.push({ content: this.newMessage, from: "me" });
+      // console.log(this.newMessage);
+      // this.messages.push({ content: this.newMessage, from: "me" });
+      this.firebaseSendMessage({
+        message: { text: this.newMessage, from: "me" },
+        otherUserId: this.$route.params.otherUserId
+      });
     },
   },
   mounted() {
@@ -76,6 +66,13 @@ export default {
   },
   computed: {
     ...mapState("store", ["messages"]),
+    otherUserDetails() {
+      if (this.$store.state.store.users[this.$route.params.otherUserId]) {
+        return this.$store.state.store.users[this.$route.params.otherUserId];
+      }
+
+      return {};
+    },
   },
   destroyed() {
     this.firebaseStopGettingMessages();

@@ -129,6 +129,11 @@ const actions = {
             messageGroup.off('child_added')
             commit('removeMessage')
         }
+    },
+    firebaseSendMessage({}, payload) {
+        console.log(payload);
+        // https://www.youtube.com/watch?v=p2WdMLJjBjk&list=PLAiDzIdBfy8iZTjdu3mjNglucWadtLG1v&index=13&ab_channel=MakeAppswithDanny
+        // https://github.com/joaohhenriq/quasar-chat-app/blob/master/src/store/store.js
     }
 }
 const getters = {
