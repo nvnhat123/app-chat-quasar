@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <q-list>
-      <q-item v-for="user in users" :key="user.id" clickable v-ripple>
+      <q-item v-for="(user, index) in users" :key="index" clickable v-ripple :to="'/chat/' + index">
         <q-item-section avatar>
           <q-avatar color="primary" text-color="white">
             {{ user.name.charAt(0) }}
@@ -10,11 +10,14 @@
 
         <q-item-section>
           <q-item-label> {{ user.name }} </q-item-label>
-          <q-item-label caption lines="1">  </q-item-label>
+          <q-item-label caption lines="1"> </q-item-label>
         </q-item-section>
 
         <q-item-section side>
-            <q-badge :color="user.online ? 'green' : 'grey' " :label="user.online ? 'Online' : 'Offline' " />
+          <q-badge
+            :color="user.online ? 'green' : 'grey'"
+            :label="user.online ? 'Online' : 'Offline'"
+          />
         </q-item-section>
       </q-item>
 
@@ -24,27 +27,14 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
     data() {
-        return {
-            users: [
-                {
-                    id: 1,
-                    name: 'PHP',
-                    online: true
-                },
-                {
-                    id: 2,
-                    name: 'JS',
-                    online: false
-                },
-                {
-                    id: 3,
-                    name: 'TS',
-                    online: true
-                }
-            ]
-        }
-    }
+        return {}
+    },
+    computed: {
+      ...mapGetters('store',['users'])
+    },
 }
 </script>

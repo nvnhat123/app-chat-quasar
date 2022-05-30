@@ -1,0 +1,42 @@
+{
+    "chats": {
+        "IKZ1vvwPGzgA8ofinhmw1qZ0dfH3": {
+            "cHDg3NP2GkXBXfvnjQDi4ETCO1H2": {
+                "MESSAGEID1": {
+                    "from": "them",
+                    "text": "hello"
+                },
+                "MESSAGEID2": {
+                    "from": "me",
+                    "text": "what"
+                }
+            }
+        },
+        "cHDg3NP2GkXBXfvnjQDi4ETCO1H2": {
+            "IKZ1vvwPGzgA8ofinhmw1qZ0dfH3": {
+                "MESSAGEID1": {
+                    "from": "me",
+                    "text": "hello"
+                },
+                "MESSAGEID2": {
+                    "from": "them",
+                    "text": "what"
+                }
+            }
+        }
+    },
+    "users": {
+        "IKZ1vvwPGzgA8ofinhmw1qZ0dfH3": {
+            "email": "tomyxiaomy@test.com",
+            "name": "tomyxiaomy",
+            "online": false,
+            "password": "123123"
+        },
+        "cHDg3NP2GkXBXfvnjQDi4ETCO1H2": {
+            "email": "jerry@test.com",
+            "name": "jerry",
+            "online": true,
+            "password": "123123"
+        }
+    }
+}
