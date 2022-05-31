@@ -6,13 +6,17 @@ let messageGroup;
 const state = {
     userDetails: {},
     users: {},
-    messages: {}
+    messages: {},
+    errorLogin: {},
 }
 
 const mutations = {
     setUserDetails(state, payload) {
         state.userDetails = payload
         console.log('state', state);
+    },
+    setErrorLoginRegister(state, payload) {
+        state.errorLogin = payload;
     },
     addUser(state, payload) {
         Vue.set(state.users, payload.userId, payload.userDetails)
@@ -25,11 +29,14 @@ const mutations = {
     },
     removeMessage(state) {
         state.messages = {};
+    },
+    clearError(state) {
+        state.errorLogin = {};
     }
 }
 const actions = {
 
-    registerUser({ }, payload) {
+    registerUser({ commit }, payload) {
         firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
             .then(response => {
                 console.log(response);
@@ -42,16 +49,17 @@ const actions = {
                 })
             })
             .catch(error => {
-                console.log(error.message);
+                commit('setErrorLoginRegister', error)
             });
     },
 
-    loginUser({ }, payload) {
+    loginUser({ commit }, payload) {
         firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
             .then(response => {
                 console.log(response);
             }).catch(error => {
-                console.log(error.message);
+                console.log(error);
+                commit('setErrorLoginRegister', error)
             })
     },
 
@@ -146,6 +154,10 @@ const actions = {
         payload.message.from = "them"
         firebase.database().ref('chats/' + payload.otherUserId + '/' + state.userDetails.userId).push(payload.message)
     },
+
+    clearErrorLoginRegister({commit}) {
+        commit('clearError');
+    }
 
 }
 
