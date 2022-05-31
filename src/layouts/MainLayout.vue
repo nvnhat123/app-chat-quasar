@@ -2,25 +2,36 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-        <q-btn
+        <!-- <q-btn
           flat
           dense
           round
           icon="menu"
           aria-label="Menu"
           @click="leftDrawerOpen = !leftDrawerOpen"
-        />
+        /> -->
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+        <q-toolbar-title>
+          <q-btn
+            v-if="$route.fullPath.includes('/chat')"
+            v-go-back.single
+            dense
+            flat
+            icon="arrow_back"
+            label="Back"
+          />
+        </q-toolbar-title>
 
         <q-btn
-          v-if="$route.fullPath.includes('/chat')"
-          v-go-back.single
+          class="absolute-center"
+          flat
+          color="white"
           dense
           flat
-          icon="arrow_back"
-          label="Back"
+          :label="'Chat with ' + otherUserDetails.name"
+          no-caps
         />
+
         <q-btn
           @click="logoutUser"
           v-if="userDetails.userId"
@@ -46,12 +57,12 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered content-class="bg-grey-1">
+    <!-- <q-drawer v-model="leftDrawerOpen" show-if-above bordered content-class="bg-grey-1">
       <q-list>
         <q-item-label header class="text-grey-8"> Essential Links </q-item-label>
         <EssentialLink v-for="link in essentialLinks" :key="link.title" v-bind="link" />
       </q-list>
-    </q-drawer>
+    </q-drawer> -->
 
     <q-page-container>
       <router-view />
@@ -71,6 +82,12 @@ export default {
 
   computed: {
     ...mapState("store", ["userDetails"]),
+    otherUserDetails() {
+      if (this.$store.state.store.users[this.$route.params.otherUserId]) {
+        return this.$store.state.store.users[this.$route.params.otherUserId];
+      }
+      return {};
+    },
   },
 
   methods: {
