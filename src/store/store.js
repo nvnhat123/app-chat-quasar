@@ -2,11 +2,13 @@ import firebase from "boot/firebase"
 import Vue from 'vue'
 
 let messageGroup;
+
 const state = {
     userDetails: {},
     users: {},
     messages: {}
 }
+
 const mutations = {
     setUserDetails(state, payload) {
         state.userDetails = payload
@@ -43,6 +45,7 @@ const actions = {
                 console.log(error.message);
             });
     },
+
     loginUser({ }, payload) {
         firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
             .then(response => {
@@ -51,9 +54,11 @@ const actions = {
                 console.log(error.message);
             })
     },
+
     logoutUser() {
         firebase.auth().signOut();
     },
+
     handleAuthStateChanged({ commit, dispatch, state }) {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
@@ -76,7 +81,7 @@ const actions = {
                     }
                 })
                 dispatch('firebaseGetUsers')
-                this.$router.push({name: 'users'});
+                this.$router.push({ name: 'users' })
             } else {
                 // User logout
                 dispatch('firebaseUpdateUser', {
@@ -86,14 +91,16 @@ const actions = {
                     }
                 })
                 commit('setUserDetails', {})
-                this.$router.push({name: 'auth'})
+                this.$router.push({ name: 'auth' })
             }
         });
     },
-    firebaseUpdateUser({}, payload) {
+
+    firebaseUpdateUser({ }, payload) {
         firebase.database().ref('users/' + payload.userId).update(payload.updates);
     },
-    firebaseGetUsers({commit}) {
+
+    firebaseGetUsers({ commit }) {
         firebase.database().ref('users').on('child_added', snapshot => {
             let userDetails = snapshot.val();
             let userId = snapshot.key
@@ -111,7 +118,8 @@ const actions = {
             })
         })
     },
-    firebaseGetMessages({state, commit}, otherUserId) {
+
+    firebaseGetMessages({ state, commit }, otherUserId) {
         let userId = state.userDetails.userId;
         messageGroup = firebase.database().ref('chats/' + userId + '/' + otherUserId);
         messageGroup.on('child_added', snapshot => {
@@ -124,23 +132,28 @@ const actions = {
             })
         })
     },
-    firebaseStopGettingMessages({commit}) {
+
+    firebaseStopGettingMessages({ commit }) {
         if (messageGroup) {
             messageGroup.off('child_added')
             commit('removeMessage')
         }
     },
-    firebaseSendMessage({}, payload) {
+
+    firebaseSendMessage({ state }, payload) {
         console.log(payload);
-        // https://www.youtube.com/watch?v=p2WdMLJjBjk&list=PLAiDzIdBfy8iZTjdu3mjNglucWadtLG1v&index=13&ab_channel=MakeAppswithDanny
-        // https://github.com/joaohhenriq/quasar-chat-app/blob/master/src/store/store.js
-    }
+        firebase.database().ref('chats/' + state.userDetails.userId + '/' + payload.otherUserId).push(payload.message)
+        payload.message.from = "them"
+        firebase.database().ref('chats/' + payload.otherUserId + '/' + state.userDetails.userId).push(payload.message)
+    },
+
 }
+
 const getters = {
     users: state => {
         let usersFiltered = {}
         Object.keys(state.users).forEach(key => {
-            if (key !== state.userDetails.userId ) {
+            if (key !== state.userDetails.userId) {
                 usersFiltered[key] = state.users[key];
             }
         })

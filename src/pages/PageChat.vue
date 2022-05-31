@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex column">
+  <q-page class="flex column" ref="pageChat">
     <q-banner class="bg-grey text-white" v-if="!otherUserDetails.online">
       Unfortunately, the credit card did not go through, please try again.
     </q-banner>
@@ -9,7 +9,6 @@
         :sent="message.from == 'me' ? true : false"
         v-for="(message, index) in messages"
       />
-      <q-chat-message :text="['doing fine, how r you?']" />
     </div>
     <q-footer elevated>
       <q-toolbar>
@@ -51,15 +50,22 @@ export default {
   },
 
   methods: {
-    ...mapActions("store", ["firebaseGetMessages", "firebaseStopGettingMessages", "firebaseSendMessage"]),
+    ...mapActions("store", [
+      "firebaseGetMessages",
+      "firebaseStopGettingMessages",
+      "firebaseSendMessage",
+    ]),
     sendMessage() {
-      // console.log(this.newMessage);
-      // this.messages.push({ content: this.newMessage, from: "me" });
       this.firebaseSendMessage({
         message: { text: this.newMessage, from: "me" },
-        otherUserId: this.$route.params.otherUserId
+        otherUserId: this.$route.params.otherUserId,
       });
+      this.clearMessage();
     },
+
+    clearMessage() {
+      this.newMessage = '';
+    }
   },
   mounted() {
     this.firebaseGetMessages(this.$route.params.otherUserId);
@@ -74,6 +80,18 @@ export default {
       return {};
     },
   },
+
+  watch: {
+    messages(value) {
+      const countMessage = Object.keys(value).length;
+      if (countMessage) {
+        setTimeout(() => {
+          window.scrollTo(0, this.$refs.pageChat.$el.scrollHeight);
+        }, 1000);
+      }
+    },
+  },
+
   destroyed() {
     this.firebaseStopGettingMessages();
   },
