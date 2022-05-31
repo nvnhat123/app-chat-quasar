@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex column" ref="pageChat">
     <q-banner class="bg-grey text-white" v-if="!otherUserDetails.online">
-      Unfortunately, the credit card did not go through, please try again.
+      User is offline.
     </q-banner>
     <div class="q-pa-md col column row justify-end">
       <q-chat-message

@@ -153,7 +153,7 @@ const getters = {
     users: state => {
         let usersFiltered = {}
         Object.keys(state.users).forEach(key => {
-            if (key !== state.userDetails.userId) {
+            if (key !== state.userDetails.userId && key !== 'undefined') {
                 usersFiltered[key] = state.users[key];
             }
         })
