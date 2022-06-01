@@ -41,8 +41,10 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import MixinOtherUserDetail from "src/mixins/other-user-detail.js";
 
 export default {
+  mixins: [MixinOtherUserDetail],
   data() {
     return {
       newMessage: "",
@@ -72,13 +74,6 @@ export default {
   },
   computed: {
     ...mapState("store", ["messages"]),
-    otherUserDetails() {
-      if (this.$store.state.store.users[this.$route.params.otherUserId]) {
-        return this.$store.state.store.users[this.$route.params.otherUserId];
-      }
-
-      return {};
-    },
   },
 
   watch: {

@@ -72,22 +72,18 @@
 
 <script>
 import EssentialLink from "components/EssentialLink.vue";
+import MixinOtherUserDetail from "src/mixins/other-user-detail.js";
 import { mapState, mapActions } from "vuex";
 
 export default {
   name: "MainLayout",
+  mixins: [MixinOtherUserDetail],
   components: {
     EssentialLink,
   },
 
   computed: {
     ...mapState("store", ["userDetails"]),
-    otherUserDetails() {
-      if (this.$store.state.store.users[this.$route.params.otherUserId]) {
-        return this.$store.state.store.users[this.$route.params.otherUserId];
-      }
-      return {};
-    },
   },
 
   methods: {
