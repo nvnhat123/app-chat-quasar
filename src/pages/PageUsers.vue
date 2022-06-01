@@ -14,7 +14,7 @@
         </q-item-section>
 
         <q-item-section side>
-          <q-badge
+          <q-badge class="shadow-5"
             :color="user.online ? 'green' : 'grey'"
             :label="user.online ? 'Online' : 'Offline'"
           />

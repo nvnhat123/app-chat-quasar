@@ -20,6 +20,7 @@
 
 <script>
 import firebase from "firebase";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "Upload",
@@ -39,9 +40,10 @@ export default {
 
     onUpload() {
       this.picture = null;
+      console.log('imas', this.imageData);
       const storageRef = firebase
         .storage()
-        .ref(`${this.imageData.name}`)
+        .ref('user-profile/' + this.userDetails.userId + '/' + this.imageData.name)
         .put(this.imageData);
       console.log(storageRef);
       storageRef.on(
@@ -61,6 +63,9 @@ export default {
         }
       );
     },
+  },
+  computed: {
+    ...mapState("store", ["userDetails"]),
   },
 };
 </script>

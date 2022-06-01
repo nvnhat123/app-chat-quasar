@@ -149,14 +149,50 @@ const actions = {
     },
 
     firebaseSendMessage({ state }, payload) {
-        console.log(payload);
         firebase.database().ref('chats/' + state.userDetails.userId + '/' + payload.otherUserId).push(payload.message)
         payload.message.from = "them"
         firebase.database().ref('chats/' + payload.otherUserId + '/' + state.userDetails.userId).push(payload.message)
     },
 
-    clearErrorLoginRegister({commit}) {
+    clearErrorLoginRegister({ commit }) {
         commit('clearError');
+    },
+
+    firebaseUpdateProfile({ }, payload) {
+        console.log('pay', payload.form);
+        // dispatch('firebaseUpdateUser', {
+        //     userId: state.userDetails.userId,
+        //     updates: {
+        //         name: payload.form.name,
+        //         description: payload.form.description,
+        //         date: payload.form.date,
+        //     }
+        // })
+
+        // dispatch('firebaseUploadImage', {
+        //     avatar: payload.form.newAvatar
+        // })
+        console.log('done');
+    },
+
+    firebaseUploadImage({state}, payload) {
+        const storage = firebase.storage()
+            .ref('user-profile/' + state.userDetails.userId + '/' + payload.avatar.name)
+        const task = storage.put(payload.avatar);
+
+            task.on('state_changed',
+                function(snap) {
+                    console.log(snap);
+                },
+                function (err) {
+                    console.log(err.message);
+                },
+                function () {
+                    storage.snapshot.ref.getDownloadURL().then(url => {
+                        console.log('link', url);
+                    })
+                }
+            );
     }
 
 }
