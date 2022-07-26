@@ -4,7 +4,7 @@
       <q-item v-for="(user, index) in users" :key="index" clickable v-ripple :to="'/chat/' + index">
         <q-item-section avatar>
           <q-avatar color="primary" text-color="white">
-            {{ user.name.charAt(0) }}
+            <!-- {{ user.name.charAt(0) }} -->
           </q-avatar>
         </q-item-section>
 
